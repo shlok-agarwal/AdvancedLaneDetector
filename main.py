@@ -33,5 +33,14 @@ if showDebugPlots:
 image = mpimg.imread('test_images/straight_lines1.jpg')
 combined = applySobelOperator(image, showDebugPlots)
 
+########
+
+#### Sobel X and S channel filter ####
+
+image = mpimg.imread('test_images/straight_lines1.jpg')
+combined = applyHSVAndSobelXFilter(image, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=(20, 100), plotVisual=showDebugPlots)
+
+########
+
 
 
