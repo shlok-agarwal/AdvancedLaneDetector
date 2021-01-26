@@ -267,3 +267,26 @@ def applyHSVAndSobelXFilter(img, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=
 		plt.show()
 
 	return combined_binary
+
+def unwarp(img, src, dst, plotVisual=False):
+	#use cv2.getPerspectiveTransform() to get M, the transform matrix
+	M = cv2.getPerspectiveTransform(src, dst)
+	#use cv2.warpPerspective() to warp your image to a top-down view
+	warped = cv2.warpPerspective(img, M, (img.shape[1], img.shape[0]), flags=cv2.INTER_LINEAR)
+
+	if plotVisual:
+		fig, ax = plt.subplots(2, 2, figsize=(20,10))
+		ax[0,0].imshow(img)
+		ax[0,0].set_title('Original Image', fontsize=20)
+		imshape = img.shape
+		vertices = np.array([[(300,650),(620, 420), (650, 420), (1020, 650)]], dtype=np.int32)
+		# vertices = np.array([[(100,imshape[0]),(440, 320), (520, 320), (880, imshape[0])]], dtype=np.int32)
+		ax[0,1].imshow(region_of_interest(img, vertices), cmap='gray')
+		ax[0,1].set_title('ROI', fontsize=20)
+		ax[1,0].imshow(warped)
+		ax[1,0].set_title('Warped', fontsize=20)
+		ax[1,1].imshow(warped)
+		ax[1,1].set_title('Warped', fontsize=20)
+		plt.show()
+
+	return warped, M
