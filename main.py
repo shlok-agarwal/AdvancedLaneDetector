@@ -39,13 +39,7 @@ combined = applyHSVAndSobelXFilter(image, sobel_kernel=3, s_thresh=(170, 255), s
 
 ####  PERSPECTIVE TRANSFORM ####
 imshape = image.shape
-# src = np.float32([[imshape[1]*.44, imshape[0]*.61],[imshape[1]*0.61, imshape[0]*.61], [imshape[1]*.94, imshape[0]], [imshape[1]*.11, imshape[0]*1]])
-# dst = np.float32([[imshape[1]*.11, imshape[0]*.61],[imshape[1]*0.94, imshape[0]*.61], [imshape[1]*.94, imshape[0]], [imshape[1]*.11, imshape[0]*1]])
 
-# src = np.float32([[imshape[1]*.16, imshape[0]*.90],[imshape[1]*0.46, imshape[0]*.55], [imshape[1]*.49, imshape[0]*.55], [imshape[1]*.88, imshape[0]*.90]])
-# dst = np.float32([[imshape[1]*.16, imshape[0]*.90],[imshape[1]*0.16, imshape[0]*.55], [imshape[1]*.88, imshape[0]*.55], [imshape[1]*.88, imshape[0]*.90]])
-
-src  = np.float32([[(300,650),(620, 420), (650, 420), (1020, 650)]])
-dst  = np.float32([[(300,650),(300, 420), (1020, 420), (1020, 650)]])
-
+src  = np.float32([[510, 490], [770, 490], [1030, 650], [280,650]])
+dst  = np.float32([[0,0], [imshape[1], 0], [imshape[1], imshape[0]], [0, imshape[0]]])
 unwarp_image = unwarp(image, src, dst, plotVisual=showDebugPlots)
