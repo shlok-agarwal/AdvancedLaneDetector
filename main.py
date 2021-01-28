@@ -6,33 +6,16 @@ import cv2
 
 showDebugPlots = True
 
-#### CALIBRATION ####
-
-#reading in test image
-test_calib_img = mpimg.imread('camera_cal/calibration3.jpg')
-
-# get camera matrix
-mtx, dist = get_cal_mtx(test_calib_img, 9, 6)
-
-# test on image
-dst = cal_undistort(test_calib_img, mtx, dist)
-
-# if showDebugPlots:
-# 	# Visualize undistortion
-# 	f, (ax1, ax2) = plt.subplots(1, 2, figsize=(20,10))
-# 	ax1.imshow(test_calib_img)
-# 	ax1.set_title('Original Image', fontsize=30)
-# 	ax2.imshow(dst)
-# 	ax2.set_title('Undistorted Image', fontsize=30)
-# 	plt.show()
-
-########
+# Load calibration
+with open('camera_calibration.p', 'rb') as f:
+	save_dict = pickle.load(f)
+mtx = save_dict['mtx']
+dist = save_dict['dist']
 
 ####  THRESHOLDING ####
 
-# Sobel Operation for edge detection
-image = mpimg.imread('test_images/straight_lines1.jpg')
-# combined = applySobelOperator(image, showDebugPlots)
+img = mpimg.imread('test_images/straight_lines1.jpg')
+image = cal_undistort(img, mtx, dist)
 
 # Sobel X and S channel filter ####
 combined = applyHSVAndSobelXFilter(image, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=(20, 100), plotVisual=showDebugPlots)
@@ -40,6 +23,11 @@ combined = applyHSVAndSobelXFilter(image, sobel_kernel=3, s_thresh=(170, 255), s
 ####  PERSPECTIVE TRANSFORM ####
 imshape = image.shape
 
-src  = np.float32([[510, 490], [770, 490], [1030, 650], [280,650]])
+width = 130
+center_x = imshape[1]//2
+src  = np.float32([[center_x - width, 450], [center_x + width, 450], [imshape[1], 650], [0,650]])
+
+src  = np.float32([[580, 445], [700, 445], [1040, 650], [270,650]])
 dst  = np.float32([[0,0], [imshape[1], 0], [imshape[1], imshape[0]], [0, imshape[0]]])
+
 unwarp_image = unwarp(image, src, dst, plotVisual=showDebugPlots)

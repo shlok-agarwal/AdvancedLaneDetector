@@ -4,6 +4,7 @@ import matplotlib.image as mpimg
 import numpy as np
 import cv2
 import glob
+import pickle as pickle
 
 def grayscale(img):
 	"""Applies the Grayscale transform
@@ -127,13 +128,16 @@ def get_cal_mtx(test_img, nx = 8, ny = 6, fname_dir = 'camera_cal/calibration*.j
 
 	# if any points found
 	if len(objpoints) > 0:
-		gray = cv2.cvtColor(test_img,cv2.COLOR_BGR2GRAY)
-		img_size = (test_img.shape[1], test_img.shape[0])
 		# Do camera calibration given object points and image points
-		ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, img_size,None,None)
+		ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, test_img.shape[1:], None, None)
 	else:
 		mtx = np.eye(3, dtype=int)
 		dist = np.zeros(3)
+	
+	print(dist)
+	print(mtx)
+	data = {'mtx': mtx, 'dist': dist}
+	pickle.dump(data, open("camera_calibration.p", "wb"))
 
 	return mtx, dist
 
@@ -277,12 +281,13 @@ def unwarp(img, src, dst, plotVisual=False):
 
 	if plotVisual:
 		fig, ax = plt.subplots(2, 2, figsize=(20,10))
-		ax[0,0].imshow(img)
 		ax[0,0].set_title('Original Image', fontsize=20)
-		ax[0,0].plot(src[0][0], src[0][1], '.')
-		ax[0,0].plot(src[1][0], src[1][1], '.')
-		ax[0,0].plot(src[2][0], src[2][1], '.')
-		ax[0,0].plot(src[3][0], src[3][1], '.')
+		cv2.polylines(img, [src.astype(np.int32)],True, (0,200,100), thickness=5)
+		ax[0,0].imshow(img)
+		ax[0,0].plot(src[0][0], src[0][1], 'r+')
+		ax[0,0].plot(src[1][0], src[1][1], 'c^')
+		ax[0,0].plot(src[2][0], src[2][1], 'r^')
+		ax[0,0].plot(src[3][0], src[3][1], 'g^')
 		ax[0,1].imshow(warped)
 		ax[0,1].set_title('Warped', fontsize=20)
 		ax[1,0].imshow(warped)
