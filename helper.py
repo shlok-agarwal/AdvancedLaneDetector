@@ -272,7 +272,7 @@ def applyHSVAndSobelXFilter(img, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=
 
 	return combined_binary
 
-def unwarp(img, src, dst, plotVisual=False):
+def warp(img, src, dst, plotVisual=False):
 	#use cv2.getPerspectiveTransform() to get M, the transform matrix
 	M = cv2.getPerspectiveTransform(src, dst)
 	#use cv2.warpPerspective() to warp your image to a top-down view
@@ -280,20 +280,16 @@ def unwarp(img, src, dst, plotVisual=False):
 	warped = cv2.warpPerspective(img, M, img_shape, flags=cv2.INTER_LINEAR)
 
 	if plotVisual:
-		fig, ax = plt.subplots(2, 2, figsize=(20,10))
-		ax[0,0].set_title('Original Image', fontsize=20)
-		cv2.polylines(img, [src.astype(np.int32)],True, (0,200,100), thickness=5)
-		ax[0,0].imshow(img)
-		ax[0,0].plot(src[0][0], src[0][1], 'r+')
-		ax[0,0].plot(src[1][0], src[1][1], 'c^')
-		ax[0,0].plot(src[2][0], src[2][1], 'r^')
-		ax[0,0].plot(src[3][0], src[3][1], 'g^')
-		ax[0,1].imshow(warped)
-		ax[0,1].set_title('Warped', fontsize=20)
-		ax[1,0].imshow(warped)
-		ax[1,0].set_title('Warped', fontsize=20)
-		ax[1,1].imshow(warped)
-		ax[1,1].set_title('Warped', fontsize=20)
+		fig, ax = plt.subplots(1, 2, figsize=(20,10))
+		ax[0].set_title('Original Image', fontsize=20)
+		cv2.polylines(img, [src.astype(np.int32)],True, (1,100,100), thickness=2)
+		ax[0].imshow(img, cmap='gray')
+		ax[0].plot(src[0][0], src[0][1], 'r+')
+		ax[0].plot(src[1][0], src[1][1], 'c^')
+		ax[0].plot(src[2][0], src[2][1], 'r^')
+		ax[0].plot(src[3][0], src[3][1], 'g^')
+		ax[1].imshow(warped,  cmap='gray')
+		ax[1].set_title('Warped', fontsize=20)
 		plt.show()
 
 	return warped, M
