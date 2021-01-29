@@ -29,8 +29,11 @@ def pipeline(image, showDebugPlots=False):
     imshape = image.shape
     src  = np.float32([[580, 445], [700, 445], [1040, 650], [270,650]])
     dst  = np.float32([[0,0], [imshape[1], 0], [imshape[1], imshape[0]], [0, imshape[0]]])
-    warped = warp(thresh, src, dst, plotVisual=showDebugPlots)
+    warped, _ = warp(thresh, src, dst, plotVisual=False)
 
     # detect lane lines
-
+    left_fit, right_fit = fit_polynomial_from_lane_pixels(warped)
+    lane_lines = search_around_poly(warped, left_fit, right_fit, plotVisual=False)
+    
     # unwrap
+    unwrap, _ = warp(lane_lines, dst, src, plotVisual=True)
