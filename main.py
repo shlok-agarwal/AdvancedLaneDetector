@@ -1,5 +1,19 @@
 from pipeline import *
+from moviepy.editor import VideoFileClip
 
-# Test functions
-image = mpimg.imread('test_images/test6.jpg')
-pipeline(image, True)
+image_fname = 'test_images/test6.jpg'
+video_fname_op = 'project_output.mp4'
+video_fname_ip = "project_video.mp4"
+
+test = 'VIDEO'
+
+if test == 'IMAGE':
+	# Test functions
+	image = mpimg.imread(image_fname)
+	lane_process_pipeline(image, True)
+else:
+	video = VideoFileClip(video_fname_ip)
+	clip = video.fl_image(lane_process_pipeline)
+	clip.write_videofile(video_fname_op, audio=False)
+	
+

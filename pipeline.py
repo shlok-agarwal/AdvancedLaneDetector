@@ -18,7 +18,8 @@ def getCalibDist():
 	global dist
 	return dist
 
-def pipeline(image, showDebugPlots=False):
+def lane_process_pipeline(image, showDebugPlots=False):
+
 	# undistort
 	undistort = cal_undistort(image, getCalibMtx(), getCalibDist())
 
@@ -38,8 +39,12 @@ def pipeline(image, showDebugPlots=False):
 	# unwrap
 	unwrap, _ = warp(lane_lines, dst, src, plotVisual=False)
 
+	# draw on original image
+	result = cv2.addWeighted(undistort, 1, unwrap, 1, 0)
+
 	#plot
 	if showDebugPlots:
-		result = cv2.addWeighted(undistort, 1, unwrap, 1, 0)
 		plt.imshow(result)
 		plt.show()
+
+	return result
