@@ -38,8 +38,10 @@ class Pipeline():
 		warped, _ = warp(thresh, src, dst, plotVisual=False)
 
 		# detect lane lines
-		left_fit, right_fit = fit_polynomial_from_lane_pixels(warped)
-		lane_lines = search_around_poly(warped, left_fit, right_fit, plotVisual=False)
+		leftx, lefty, rightx, righty, _ = find_lane_pixels(warped)
+		self.left_lane.add_measurement(leftx, lefty)
+		self.right_lane.add_measurement(rightx, righty)
+		lane_lines = search_around_poly(warped, self.left_lane.current_fit, self.right_lane.current_fit, plotVisual=False)
 		
 		# unwrap
 		unwrap, _ = warp(lane_lines, dst, src, plotVisual=False)

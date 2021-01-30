@@ -8,7 +8,7 @@ video_fname_ip = "project_video.mp4"
 ## Create global variables
 pipeline = Pipeline()
 
-test = 'IMAGE'
+test = 'VIDEO'
 
 if test == 'IMAGE':
 	# Test functions
@@ -16,7 +16,7 @@ if test == 'IMAGE':
 	pipeline.process_image(image, True)
 else:
 	video = VideoFileClip(video_fname_ip)
-	clip = video.fl_image(lane_process_pipeline)
+	clip = video.fl_image(pipeline.process_image)
 	clip.write_videofile(video_fname_op, audio=False)
 	
 

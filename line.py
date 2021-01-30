@@ -27,8 +27,19 @@ class Line():
         self.center = []
         # conversion of pixels to length
         self.pixels_to_length = []
+        # number of iteration
+        self.num_iter = 0
 
     # Use this function to completely reset the line parameters and start from scratch 
     def reset(self):
-        pass
+        self.num_iter = 0
+
+    def add_measurement(self, x, y):
+        self.allx = x
+        self.ally = y
+        self.num_iter += 1
+
+        self.current_fit = np.polyfit(self.ally, self.allx, 2)
+        self.best_fit += self.current_fit/self.num_iter
+
 
