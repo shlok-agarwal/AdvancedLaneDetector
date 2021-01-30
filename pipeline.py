@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
 import cv2
+import params
 
 # Load calibration
 with open('camera_calibration.p', 'rb') as f:
@@ -24,6 +25,19 @@ class Pipeline():
 		self.left_lane = Line()
 		self.right_lane = Line()
 
+	def is_suitable_measurement(self):
+		ret = False
+		if self.left_lane.is_suitable_measurement() and self.right_lane.is_suitable_measurement():
+			# check center to center distance
+			accetable_line_width = np.abs(self.left_lane.center[1] - self.right_lane.center[1]) < params.LANE_WIDTH
+			# add more conditions later
+
+			if accetable_line_width:
+				ret = True
+
+		return ret
+
+	
 	def process_image(self, image, showOutput=False):
 			# undistort
 		undistort = cal_undistort(image, getCalibMtx(), getCalibDist())
@@ -39,9 +53,23 @@ class Pipeline():
 
 		# detect lane lines
 		leftx, lefty, rightx, righty, _ = find_lane_pixels(warped)
-		self.left_lane.add_measurement(leftx, lefty)
-		self.right_lane.add_measurement(rightx, righty)
-		lane_lines = search_around_poly(warped, self.left_lane.current_fit, self.right_lane.current_fit, plotVisual=False)
+
+		# self.left_lane.add_measurement(leftx, lefty)
+		# self.right_lane.add_measurement(rightx, righty)
+		
+		# if self.is_suitable_measurement():
+		# 	self.left_lane.approve_measurement()
+		# 	self.right_lane.approve_measurement()
+		# else:
+		# 	self.left_lane.reject_measurement()
+		# 	self.right_lane.reject_measurement()
+
+		self.left_lane.best_fit = self.left_lane.get_current_pixels_polyfit(leftx, lefty)
+		self.right_lane.best_fit = self.right_lane.get_current_pixels_polyfit(rightx, righty)
+
+		# You now have the best fit polynomial, just need to plot on the image
+
+		lane_lines = plot_lanes(warped, self.left_lane.best_fit, self.right_lane.best_fit)
 		
 		# unwrap
 		unwrap, _ = warp(lane_lines, dst, src, plotVisual=False)
