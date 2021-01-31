@@ -40,18 +40,18 @@ class Pipeline():
 		return ret
 
 	
-	def process_image(self, image, showOutput=False):
-			# undistort
+	def process_image(self, image, showOutput=False, showDebugFigs = False):
+		# undistort
 		undistort = cal_undistort(image, getCalibMtx(), getCalibDist())
 
 		# threshold
-		thresh = applyHSVAndSobelXFilter(undistort, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=(20, 100), plotVisual=False)
+		thresh = applyHSVAndSobelXFilter(undistort, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=(20, 100), plotVisual=showDebugFigs)
 
 		# find src and dst points and warp
-		imshape = image.shape
-		src  = np.float32([[580, 445], [700, 445], [1040, 650], [270,650]])
-		dst  = np.float32([[0,0], [imshape[1], 0], [imshape[1], imshape[0]], [0, imshape[0]]])
-		warped, _ = warp(thresh, src, dst, plotVisual=False)
+		params.IMSHAPE = image.shape
+		src  = params.SRC_POINTS
+		dst  = params.DST_POINTS
+		warped, _ = warp(thresh, src, dst, plotVisual=showDebugFigs)
 
 		self.left_lane.image = image
 		self.right_lane.image = image
