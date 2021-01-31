@@ -255,7 +255,9 @@ def applyHSVAndSobelXFilter(img, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=
 	s_binary[(s_channel >= s_thresh[0]) & (s_channel <= s_thresh[1])] = 1
    
 	combined_binary = np.zeros_like(sxbinary)
-	combined_binary[(s_binary == 1) | (sxbinary == 1)] = 1
+	# combined_binary[(s_binary == 1) | (sxbinary == 1)] = 1
+	combined_binary = cv2.addWeighted(s_binary, 1, sxbinary, 0.6, 0)
+
 
 	if plotVisual:
 		# Visualize undistortion

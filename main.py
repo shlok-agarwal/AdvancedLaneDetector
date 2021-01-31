@@ -3,7 +3,7 @@ from moviepy.editor import VideoFileClip
 
 # image_fname = 'test_images/straight_lines1.jpg'
 # image_fname = 'test_images/straight_lines2.jpg'
-image_fname = 'test_images/test1.jpg'
+image_fname = 'test_images/test1.jpg' # fix some other way
 # image_fname = 'test_images/test2.jpg'
 # image_fname = 'test_images/test3.jpg'
 # image_fname = 'test_images/test4.jpg'

@@ -6,5 +6,5 @@ LANE_WIDTH = 5
 MAX_CONS_BAD_MEAS = 10
 
 IMSHAPE = np.array([720,1280,3])
-SRC_POINTS = np.float32([[540, 445], [750, 445], [1130, 680], [200,680]])
+SRC_POINTS = np.float32([[540, 445], [750, 445], [1130, 700], [200,700]])
 DST_POINTS = np.float32([[0,0], [IMSHAPE[1], 0], [IMSHAPE[1], IMSHAPE[0]], [0, IMSHAPE[0]]])
