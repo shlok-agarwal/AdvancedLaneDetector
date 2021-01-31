@@ -28,12 +28,14 @@ class Pipeline():
 	def is_suitable_measurement(self):
 		ret = False
 		if self.left_lane.is_suitable_measurement() and self.right_lane.is_suitable_measurement():
-			# check center to center distance
-			accetable_line_width = np.abs(self.left_lane.center[1] - self.right_lane.center[1]) < params.LANE_WIDTH
-			# add more conditions later
+			## TODO
+			# # check center to center distance
+			# accetable_line_width = np.abs(self.left_lane.center[1] - self.right_lane.center[1]) < params.LANE_WIDTH
+			# # add more conditions later
 
-			if accetable_line_width:
-				ret = True
+			# if accetable_line_width:
+			# 	ret = True
+			ret = True
 
 		return ret
 
@@ -51,25 +53,40 @@ class Pipeline():
 		dst  = np.float32([[0,0], [imshape[1], 0], [imshape[1], imshape[0]], [0, imshape[0]]])
 		warped, _ = warp(thresh, src, dst, plotVisual=False)
 
-		# detect lane lines
-		leftx, lefty, rightx, righty, _ = find_lane_pixels(warped)
+		self.left_lane.image = image
+		self.right_lane.image = image
 
-		# self.left_lane.add_measurement(leftx, lefty)
-		# self.right_lane.add_measurement(rightx, righty)
-		
-		# if self.is_suitable_measurement():
-		# 	self.left_lane.approve_measurement()
-		# 	self.right_lane.approve_measurement()
-		# else:
-		# 	self.left_lane.reject_measurement()
-		# 	self.right_lane.reject_measurement()
+		if self.left_lane.detected and self.right_lane.detected \
+			and self.left_lane.num_cons_bad_measurements < params.MAX_CONS_BAD_MEAS \
+			and self.right_lane.num_cons_bad_measurements < params.MAX_CONS_BAD_MEAS:
+			self.left_lane.search_around_best_fit()
+			self.right_lane.search_around_best_fit()
 
-		self.left_lane.best_fit = self.left_lane.get_current_pixels_polyfit(leftx, lefty)
-		self.right_lane.best_fit = self.right_lane.get_current_pixels_polyfit(rightx, righty)
+			# report solution quality
+			if self.is_suitable_measurement() == False:
+				self.left_lane.reject_measurement()
+				self.right_lane.reject_measurement()
+			else:
+				self.left_lane.approve_measurement()
+				self.right_lane.approve_measurement()
+			
+			left_fit = self.left_lane.best_fit
+			right_fit = self.right_lane.best_fit
 
+			# print("poly search =>", self.left_lane.num_cons_good_measurements, self.left_lane.num_cons_bad_measurements, self.left_lane.best_fit)
+		else:
+			self.left_lane.reset()
+			self.right_lane.reset()
+
+			# detect lane lines
+			leftx, lefty, rightx, righty, _ = find_lane_pixels(warped)
+			left_fit = self.left_lane.get_current_pixels_polyfit(leftx, lefty)
+			right_fit = self.right_lane.get_current_pixels_polyfit(rightx, righty)
+			# print("slide window search", left_fit)
+			
 		# You now have the best fit polynomial, just need to plot on the image
 
-		lane_lines = plot_lanes(warped, self.left_lane.best_fit, self.right_lane.best_fit)
+		lane_lines = plot_lanes(warped, left_fit, right_fit)
 		
 		# unwrap
 		unwrap, _ = warp(lane_lines, dst, src, plotVisual=False)

@@ -34,13 +34,21 @@ class Line():
 		self.num_iter_approved = 0
 		# number of iteration rejected
 		self.num_iter_rejected = 0
+		# number of consecutive bad measurements
+		self.num_cons_bad_measurements = 0
+		# number of consecutive bad measurements
+		self.num_cons_good_measurements = 0
 
 	# Use this function to completely reset the line parameters and start from scratch 
 	def reset(self):
 		self.num_iter_approved = 0
 		self.num_iter_rejected = 0
+		self.num_cons_good_measurements = 0
+		self.num_cons_bad_measurements = 0
+		self.best_fit = None
+		self.current_fit = None
+		self.detected = False
 
-	
 	def calc_radii_curvature(self, poly, y):
 		A = poly[0]
 		B = poly[1]
@@ -52,19 +60,22 @@ class Line():
 		ret = False
 		if self.current_fit is not None:
 			# calc radii of curvature
-			self.radius_of_curvature = self.calc_radii_curvature(self.current_fit, np.max(self.ally))
+			self.radius_of_curvature = self.calc_radii_curvature(self.current_fit, np.max(self.image.shape[0]))
 			
 			# is radii of curvature acceptable
 			acceptable_radii = self.radius_of_curvature < params.ACCEPTABLE_RADII
 
 			# if norm diff in poly coeff acceptable
 			self.diffs = np.linalg.norm(self.best_fit - self.current_fit)
+			print()
 			acceptable_poly = self.diffs < params.ACCEPTABLE_POLY_DELTA
 
 			if acceptable_radii and acceptable_poly:
 				ret = True
+			print(self.current_fit, self.calc_radii_curvature(self.current_fit, np.max(self.image.shape[0])), self.diffs)
 		else:
 			ret = False
+			print("bad current fit")
 		
 		return ret
 
@@ -81,11 +92,15 @@ class Line():
 		self.current_fit = search_around_best_fit()
 	
 	def approve_measurement(self):
+		self.num_cons_good_measurements +=1
 		self.num_iter_approved += 1
 		self.best_fit += self.current_fit/self.num_iter_approved
+		self.num_cons_bad_measurements = 0 
 
 	def reject_measurement(self):
 		self.num_iter_rejected += 1
+		self.num_cons_bad_measurements +=1
+		self.num_cons_good_measurements = 0
 	
 	# Check if enough points around best fit and calculate current fit based on it
 	def search_around_best_fit(self):
@@ -123,10 +138,15 @@ class Line():
 		else:
 			fit = None
 
+		# set to current fit
+		self.current_fit = fit
+
 		return fit
 	
 	def get_current_pixels_polyfit(self, x, y):
-		return np.polyfit(y, x, 2)
+		self.detected = True
+		self.best_fit = np.polyfit(y, x, 2)
+		return self.best_fit
 
 
 

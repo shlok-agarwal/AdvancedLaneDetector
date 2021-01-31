@@ -8,7 +8,7 @@ video_fname_ip = "project_video.mp4"
 ## Create global variables
 pipeline = Pipeline()
 
-test = 'IMAGE'
+test = 'VIDEO'
 
 if test == 'IMAGE':
 	# Test functions
