@@ -29,3 +29,10 @@ Important Files
 * `line.py` is a class that stores the information for the lane. Based on current and past detections, it finds the best fitting polynomial
 
 To get started, run `main.py`.
+
+Discussion and Future Work
+---
+This project is a combination of image processing algorithms to segment the lane pixels and polynomial fitting to fit lane lines. A sliding window search is used to find the lane lines. To save on processing time and knowing that the lane lines do not change much after every frame, a search is conducted around the polynomial to find the new coefficients every frame. A heuristic approach determines if we need to run the sliding window search again.
+
+CV projects often involve very fine tuning so this algorithm and parameters selected might not be suitable for real world scenario yet. A better heuristic approach to determine the quality of lane detection would be extremely helpful to filter outliers and get more accurate lane line. Better image thresholding and perspective transform thresholds would help in different lighting conditions and when the car is not aligned in the center of the lane.
+
