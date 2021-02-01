@@ -95,7 +95,7 @@ class Pipeline():
 		lane_lines = plot_lanes(warped, left_fit, right_fit)
 		
 		# unwrap
-		unwrap, _ = warp(lane_lines, dst, src, plotVisual=False)
+		unwrap, _ = warp(lane_lines, dst, src, plotVisual=showDebugFigs)
 
 		# draw on original image
 		result = cv2.addWeighted(undistort, 1, unwrap, 0.3, 0)
