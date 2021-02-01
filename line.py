@@ -38,12 +38,14 @@ class Line():
 		self.current_fit = None
 		self.detected = False
 
+	# https://www.intmath.com/applications-differentiation/8-radius-curvature.php
 	def calc_radii_curvature(self, poly, y):
 		A = poly[0]
 		B = poly[1]
 		R = ((1 + (2*A*y + B)**2)**1.5)/(2*abs(A))
 		return R
 
+	# evaluates if current measurements meet given criteria.
 	def is_suitable_measurement(self):
 
 		ret = False
@@ -67,12 +69,14 @@ class Line():
 		
 		return ret
 	
+	# if suitable measurement, update the best fit estimate
 	def approve_measurement(self):
 		self.num_cons_good_measurements +=1
 		self.best_fit = (self.best_fit*self.num_iter_approved + self.current_fit)/(self.num_iter_approved + 1)
 		self.num_iter_approved += 1
 		self.num_cons_bad_measurements = 0 
 
+	# if note suitable measurement, reject the outlier
 	def reject_measurement(self):
 		self.num_cons_bad_measurements +=1
 		self.num_cons_good_measurements = 0
@@ -118,6 +122,8 @@ class Line():
 
 		return fit
 	
+	# returns polynomial given the x, y points of the lane.
+	# called after sliding window search
 	def get_current_pixels_polyfit(self, x, y):
 		self.detected = True
 		self.best_fit = np.polyfit(y, x, 2)

@@ -51,9 +51,11 @@ def get_cal_mtx(test_img, nx = 8, ny = 6, fname_dir = 'camera_cal/calibration*.j
 
 	return mtx, dist
 
+# undistort the image
 def cal_undistort(img, mtx, dist): 
 	return cv2.undistort(img, mtx, dist, None, mtx)
 
+# apply HSV and soble filter on image
 def applyHSVAndSobelXFilter(img, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=(20, 100), plotVisual = False):
 	img = np.copy(img)
 	# Convert to HLS color space and separate the V channel
@@ -92,6 +94,7 @@ def applyHSVAndSobelXFilter(img, sobel_kernel=3, s_thresh=(170, 255), sx_thresh=
 
 	return combined_binary
 
+# birds eye view by wrapping image
 def warp(img, src, dst, plotVisual=False):
 	#use cv2.getPerspectiveTransform() to get M, the transform matrix
 	M = cv2.getPerspectiveTransform(src, dst)
@@ -114,6 +117,7 @@ def warp(img, src, dst, plotVisual=False):
 
 	return warped, M
 
+# find lane pixels using sliding window search
 def find_lane_pixels(binary_warped):
 	# Take a histogram of the bottom half of the image
 	histogram = np.sum(binary_warped[binary_warped.shape[0]//2:,:], axis=0)
@@ -198,6 +202,7 @@ def find_lane_pixels(binary_warped):
 
 	return leftx, lefty, rightx, righty, out_img
 
+# given the left and right lane polynomials, plot a lane on the image
 def plot_lanes(image, left_poly, right_poly):
 	
 	margin = 100
