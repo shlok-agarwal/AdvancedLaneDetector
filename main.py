@@ -13,10 +13,13 @@ image_fname = 'test_images/test1.jpg' # fix some other way
 video_fname_op = 'project_output.mp4'
 video_fname_ip = "project_video.mp4"
 
+# video_fname_op = 'challenge_video_op.mp4'
+# video_fname_ip = "challenge_video.mp4"
+
 ## Create global variables
 pipeline = Pipeline()
 
-test = 'IMAGE'
+test = 'VIDEO'
 
 if test == 'IMAGE':
 	# Test functions
@@ -24,7 +27,7 @@ if test == 'IMAGE':
 	pipeline.process_image(image, True, True)
 else:
 	video = VideoFileClip(video_fname_ip)
-	clip = video.fl_image(pipeline.process_image)
+	clip = video.fl_image(lambda img: pipeline.process_image(img, False, False))
 	clip.write_videofile(video_fname_op, audio=False)
 	
 

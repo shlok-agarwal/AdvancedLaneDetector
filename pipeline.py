@@ -53,8 +53,8 @@ class Pipeline():
 		dst  = params.DST_POINTS
 		warped, _ = warp(thresh, src, dst, plotVisual=showDebugFigs)
 
-		self.left_lane.image = image
-		self.right_lane.image = image
+		self.left_lane.image = warped
+		self.right_lane.image = warped
 
 		if self.left_lane.detected and self.right_lane.detected \
 			and self.left_lane.num_cons_bad_measurements < params.MAX_CONS_BAD_MEAS \
@@ -73,7 +73,9 @@ class Pipeline():
 			left_fit = self.left_lane.best_fit
 			right_fit = self.right_lane.best_fit
 
-			# print("poly search =>", self.left_lane.num_cons_good_measurements, self.left_lane.num_cons_bad_measurements, self.left_lane.best_fit)
+			# print("left poly search =>", self.left_lane.num_cons_good_measurements, self.left_lane.num_cons_bad_measurements)
+			# print("poly poly search =>", self.right_lane.num_cons_good_measurements, self.right_lane.num_cons_bad_measurements)
+
 		else:
 			self.left_lane.reset()
 			self.right_lane.reset()
@@ -82,7 +84,7 @@ class Pipeline():
 			leftx, lefty, rightx, righty, _ = find_lane_pixels(warped)
 			left_fit = self.left_lane.get_current_pixels_polyfit(leftx, lefty)
 			right_fit = self.right_lane.get_current_pixels_polyfit(rightx, righty)
-			# print("slide window search", left_fit)
+			# print("slide window search", left_fit, right_fit)
 			
 		# You now have the best fit polynomial, just need to plot on the image
 
@@ -92,7 +94,7 @@ class Pipeline():
 		unwrap, _ = warp(lane_lines, dst, src, plotVisual=False)
 
 		# draw on original image
-		result = cv2.addWeighted(undistort, 1, unwrap, 1, 0)
+		result = cv2.addWeighted(undistort, 1, unwrap, 0.3, 0)
 
 		#plot
 		if showOutput:
