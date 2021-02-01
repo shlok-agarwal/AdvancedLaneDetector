@@ -20,6 +20,11 @@ def getCalibDist():
 	global dist
 	return dist
 
+
+'''
+This class acts as a pipeline to process the image frames, detect the lanes and plot them on the image.
+It also acts like a lane manager or coordinater for the left and right lane.
+'''
 class Pipeline():
 	def __init__(self):
 		self.left_lane = Line()
@@ -73,9 +78,8 @@ class Pipeline():
 			left_fit = self.left_lane.best_fit
 			right_fit = self.right_lane.best_fit
 
-			# print("left poly search =>", self.left_lane.num_cons_good_measurements, self.left_lane.num_cons_bad_measurements)
-			# print("poly poly search =>", self.right_lane.num_cons_good_measurements, self.right_lane.num_cons_bad_measurements)
-
+			# print(" poly search quality: good=>", [self.left_lane.num_cons_good_measurements, self.right_lane.num_cons_good_measurements] \
+			# 	, "bad =>", [self.left_lane.num_cons_bad_measurements, self.right_lane.num_cons_bad_measurements])
 		else:
 			self.left_lane.reset()
 			self.right_lane.reset()

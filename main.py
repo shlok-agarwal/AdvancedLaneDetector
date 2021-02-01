@@ -1,9 +1,11 @@
 from pipeline import *
 from moviepy.editor import VideoFileClip
 
-# image_fname = 'test_images/straight_lines1.jpg'
+
+# TEST FILES
+image_fname = 'test_images/straight_lines1.jpg'
 # image_fname = 'test_images/straight_lines2.jpg'
-image_fname = 'test_images/test1.jpg' # fix some other way
+# image_fname = 'test_images/test1.jpg' 
 # image_fname = 'test_images/test2.jpg'
 # image_fname = 'test_images/test3.jpg'
 # image_fname = 'test_images/test4.jpg'
@@ -24,7 +26,7 @@ test = 'VIDEO'
 if test == 'IMAGE':
 	# Test functions
 	image = mpimg.imread(image_fname)
-	pipeline.process_image(image, True, True)
+	pipeline.process_image(image, False, True)
 else:
 	video = VideoFileClip(video_fname_ip)
 	clip = video.fl_image(lambda img: pipeline.process_image(img, False, False))

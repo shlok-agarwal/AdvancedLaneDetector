@@ -1,6 +1,10 @@
 import numpy as np
 import params
 
+'''
+This class stores the information for the lane
+Based on current and past detections, it finds the best fitting polynomial
+'''
 class Line():
 
 	def __init__(self):
