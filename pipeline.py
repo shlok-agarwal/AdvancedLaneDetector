@@ -100,6 +100,9 @@ class Pipeline():
 		# draw on original image
 		result = cv2.addWeighted(undistort, 1, unwrap, 0.3, 0)
 
+		# annotate
+		result = annotate(result)
+
 		#plot
 		if showOutput:
 			plt.imshow(result)

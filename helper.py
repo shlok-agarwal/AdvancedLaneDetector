@@ -246,3 +246,13 @@ def plot_lanes(image, left_poly, right_poly):
 	## End visualization steps ##
 	return result
 
+def annotate(img):
+	rows, cols = img.shape[0], img.shape[1]
+	font = cv2.FONT_HERSHEY_SIMPLEX
+	dst = img
+	lrad = 46
+	pos = 0.12
+	cv2.putText(dst,'Left curve radius = {:.0f}m'.format(lrad), (np.int(cols/2)-100,100), font, 1,(255,255,255),2)
+	cv2.putText(dst,'Position = {:1.2}m left'.format(pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
+	return dst
+

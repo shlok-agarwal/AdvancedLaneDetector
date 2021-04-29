@@ -26,7 +26,7 @@ test = 'IMAGE'
 if test == 'IMAGE':
 	# Test functions
 	image = mpimg.imread(image_fname)
-	pipeline.process_image(image, False, True)
+	pipeline.process_image(image, showOutput=True, showDebugFigs = False)
 else:
 	video = VideoFileClip(video_fname_ip)
 	clip = video.fl_image(lambda img: pipeline.process_image(img, False, False))
