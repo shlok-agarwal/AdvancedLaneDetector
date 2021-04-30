@@ -251,7 +251,7 @@ def annotate(img, r1, r2, pos):
 	font = cv2.FONT_HERSHEY_SIMPLEX
 	dst = img
 
-	if pos > 0:
+	if pos < 0:
 		cv2.putText(dst,'Position = {:1.2}m left'.format(pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
 	else:
 		cv2.putText(dst,'Position = {:1.2}m right'.format(-pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
