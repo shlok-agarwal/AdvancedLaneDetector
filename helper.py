@@ -252,9 +252,9 @@ def annotate(img, r1, r2, pos):
 	dst = img
 
 	if pos < 0:
-		cv2.putText(dst,'Position = {:1.2}m left'.format(pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
+		cv2.putText(dst,'Position = {:1.2}m left'.format(-pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
 	else:
-		cv2.putText(dst,'Position = {:1.2}m right'.format(-pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
+		cv2.putText(dst,'Position = {:1.2}m right'.format(pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
 
 	cv2.putText(dst,'Left curve radius = {:.0f}m'.format(r1), (np.int(cols/2)-100,100), font, 1,(255,255,255),2)
 	cv2.putText(dst,'Right curve radius = {:.0f}m'.format(r2), (np.int(cols/2)-100,150), font, 1,(255,255,255),2)
