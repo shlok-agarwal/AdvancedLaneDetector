@@ -1,6 +1,6 @@
 ## Advanced Lane Finding 
 
-Here is a link to the [video](https://photos.app.goo.gl/a1xMmXazTVq2ShceA)
+![](project-gif.gif)
 
 The Project
 ---
