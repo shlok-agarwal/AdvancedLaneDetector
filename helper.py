@@ -246,13 +246,31 @@ def plot_lanes(image, left_poly, right_poly):
 	## End visualization steps ##
 	return result
 
-def annotate(img, r1, r2):
+def annotate(img, r1, r2, pos):
 	rows, cols = img.shape[0], img.shape[1]
 	font = cv2.FONT_HERSHEY_SIMPLEX
 	dst = img
-	pos = 0.12
+
+	if pos > 0:
+		cv2.putText(dst,'Position = {:1.2}m left'.format(pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
+	else:
+		cv2.putText(dst,'Position = {:1.2}m right'.format(-pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
+
 	cv2.putText(dst,'Left curve radius = {:.0f}m'.format(r1), (np.int(cols/2)-100,100), font, 1,(255,255,255),2)
 	cv2.putText(dst,'Right curve radius = {:.0f}m'.format(r2), (np.int(cols/2)-100,150), font, 1,(255,255,255),2)
-	cv2.putText(dst,'Position = {:1.2}m left'.format(pos), (np.int(cols/2)-100,50), font, 1,(255,255,255),2)
 	return dst
 
+def car_offset_from_center(img, left_fit, right_fit, xm_per_pix=3.7/800):
+	# ploty = np.linspace(0, img.shape[0] - 1, img.shape[0])
+	y_eval = 600 #img.shape[0] - 1
+	leftx = left_fit[0]*y_eval**2 + left_fit[1]*y_eval + left_fit[2]
+	rightx = right_fit[0]*y_eval**2 + right_fit[1]*y_eval + right_fit[2]
+
+	car_pos = (leftx + rightx)/2
+	
+	## Image mid horizontal position 
+	mid_imgx = img.shape[1]//2
+
+	## Horizontal car offset 
+	offsetx = (mid_imgx - car_pos) * xm_per_pix
+	return offsetx

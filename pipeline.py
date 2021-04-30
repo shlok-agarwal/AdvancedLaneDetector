@@ -101,7 +101,8 @@ class Pipeline():
 		result = cv2.addWeighted(undistort, 1, unwrap, 0.3, 0)
 
 		# annotate
-		result = annotate(result,self.left_lane.get_roc(), self.right_lane.get_roc())
+		car_offset = car_offset_from_center(result, left_fit, right_fit)
+		result = annotate(result,self.left_lane.get_roc(), self.right_lane.get_roc(), car_offset)
 
 		#plot
 		if showOutput:

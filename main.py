@@ -3,10 +3,10 @@ from moviepy.editor import VideoFileClip
 
 
 # TEST FILES
-image_fname = 'test_images/straight_lines1.jpg'
+# image_fname = 'test_images/straight_lines1.jpg'
 # image_fname = 'test_images/straight_lines2.jpg'
 # image_fname = 'test_images/test1.jpg' 
-# image_fname = 'test_images/test2.jpg'
+image_fname = 'test_images/test2.jpg'
 # image_fname = 'test_images/test3.jpg'
 # image_fname = 'test_images/test4.jpg'
 # image_fname = 'test_images/test5.jpg'
