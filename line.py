@@ -129,6 +129,23 @@ class Line():
 		self.best_fit = np.polyfit(y, x, 2)
 		self.num_iter_approved = 1
 		return self.best_fit
+	
+	def get_roc(self):
+
+		ploty = np.linspace(0, self.image.shape[0] - 1, self.image.shape[0])
+		# Define conversions in x and y from pixels space to meters
+		ym_per_pix = 25.0/720 # meters per pixel in y dimension
+		xm_per_pix = 3.7/800 # meters per pixel in x dimension
+		
+		# Fit new polynomials to x,y in world space
+		y_eval = np.max(ploty)
+		xf = self.best_fit[0]*ploty**2 + self.best_fit[1]*ploty + self.best_fit[2]
+		fit_world = np.polyfit(ploty*ym_per_pix, xf*xm_per_pix, 2)
+
+		# Calculate the new radii of curvature
+		radii = ((1 + (2*fit_world[0]*y_eval*ym_per_pix + fit_world[1])**2)**1.5) / np.absolute(2*fit_world[0])
+
+		return radii
 
 
 
